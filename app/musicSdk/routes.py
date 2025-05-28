@@ -29,7 +29,7 @@ def download():
     if not music_url or not music_name:
         return jsonify({'error': 'musicURL and musicName are required'}), 400
 
-    music_dir = os.environ.get('MUSIC_DIR', '/music')
+    music_dir = os.environ.get('MUSIC_DIR')
     os.makedirs(music_dir, exist_ok=True)
     file_path = os.path.join(music_dir, music_name)
 
