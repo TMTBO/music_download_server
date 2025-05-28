@@ -1,9 +1,10 @@
+import os
 import requests
 from flask import Blueprint, request, jsonify
 
 
-API_URL = "https://api.ikunshare.top:8000"
-API_KEY = "BUFA_294996ce-BNYV0OBBOQ4SGGCJ"
+API_URL = os.environ.get("IKUN_API_URL")
+API_KEY = os.environ.get("IKUN_API_KEY")
 MUSIC_QUALITY = {
     "kw":["128k","320k","flac","flac24bit","hires"],
     "mg":["128k","320k","flac","flac24bit","hires"],
