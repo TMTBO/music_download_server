@@ -22,12 +22,4 @@ def getURL():
         })
         print(f"{rule.endpoint}: {rule.methods} -> {rule}")
     return {"routes": paths}
-
-if __name__ == "__main__":
-    app.run(
-        host=app.config.get("HOST", "127.0.0.1"),
-        port=app.config.get("PORT", 5050),
-        debug=app.config.get("DEBUG", True)
-    )
-
 # flask run -h "0.0.0.0" -p 80 --debug
