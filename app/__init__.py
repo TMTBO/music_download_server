@@ -1,14 +1,14 @@
 from flask import Flask
 from flask_cors import CORS
 from app.routes import main  # 导入 Blueprint
-from app.musicSdk.routes import music
+from app.musicSdk.routes import api
 
 app = Flask(__name__)
 CORS(app)  # 开启全局 CORS
 app.config.from_object('config.Config')  # 加载配置
 
 app.register_blueprint(main)
-app.register_blueprint(music)  # 注册 Blueprint
+app.register_blueprint(api)  # 注册 Blueprint
 
 @app.route('/geturl')
 def getURL():

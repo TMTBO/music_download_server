@@ -17,6 +17,9 @@ music.register_blueprint(mg)
 music.register_blueprint(wy)
 music.register_blueprint(ikun) 
 
+api = Blueprint('api', __name__, url_prefix='/api')
+api.register_blueprint(music)
+
 @music.route('/download', methods=['POST'])
 def download():
     """
