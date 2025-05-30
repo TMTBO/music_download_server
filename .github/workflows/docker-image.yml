@@ -13,26 +13,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
-      with:
-        platforms: arm64
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    - name: Build Docker image (arm64)
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: Dockerfile
-        platforms: linux/arm64
-        push: false
-        tags: tenma/music_download_server:${{ github.ref_name }}
-        outputs: type=docker,dest=music_download_server_${{ github.ref_name }}.tar
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image (arm64)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/arm64
+          push: false
+          tags: |
+            tenma/music_download_server:latest
+          outputs: type=docker,dest=music_download_server_arm64_latest.tar
 
-    - name: Upload Docker image to release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: music_download_server_${{ github.ref_name }}.tar
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Docker image to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: music_download_server_arm64_latest.tar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
