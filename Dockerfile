@@ -14,4 +14,4 @@ RUN pip install --upgrade pip \
 EXPOSE 5050
 
 # 启动命令
-CMD ["python", "-m", "app"]
+CMD ["python", "app/__init__.py"]
