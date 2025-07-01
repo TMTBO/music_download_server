@@ -60,3 +60,40 @@ def musicSearch():
         return jsonify(data['songResultData'])
     else:
         return jsonify({'error': 'No results found'}), 404
+
+@mg.route('/getPicURL', methods=['GET'])
+def getPicURL():
+    """
+    获取咪咕音乐歌曲图片链接
+    :param songId: 歌曲ID
+    :return: 图片链接的JSON数据
+    """
+    songId = request.args.get('songId', '')
+    
+    if not songId:
+        print("songId is required")
+        return jsonify({'picUrl': ""})
+    
+    url = f"http://music.migu.cn/v3/api/music/audioPlayer/getSongPic?songId={songId}"
+    
+    headers = {
+        'Referer': 'http://music.migu.cn/v3/music/player/audio?from=migu',
+    }
+    
+    resp = requests.get(url, headers=headers)
+    resp.raise_for_status()
+
+    print(f"Response from {url}: {resp.text}")
+    
+    data = resp.json()
+    
+    if data['returnCode'] != '000000':
+        print(f"Error fetching picture URL: {data.get('returnCode', 'Unknown error')}")
+        return jsonify({'picUrl': ""})
+    
+    pic_url = data.get('largePic') or data.get('mediumPic') or data.get('smallPic')
+    
+    if not pic_url.startswith(('http:', 'https:')):
+        pic_url = 'http:' + pic_url
+    
+    return jsonify({'picUrl': pic_url})

@@ -47,3 +47,19 @@ def getMusicURL():
         return jsonify(resp.json())
     except requests.RequestException as e:
         return jsonify({'error': str(e)}), 500
+
+#    v12
+#   const request = await httpFetch(
+#     `${API_URL}/url?source=${source}&songId=${songId}&quality=${quality}`,
+#     {
+#       method: "GET",
+#       headers: {
+#         "Content-Type": "application/json",
+#         "User-Agent": `${
+#           env ? `lx-music-${env}/${version}` : `lx-music-request/${version}`
+#         }`,
+#         "X-Request-Key": API_KEY,
+#       },
+#       follow_max: 5,
+#     }
+#   );

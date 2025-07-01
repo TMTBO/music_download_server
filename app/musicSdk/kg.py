@@ -73,3 +73,74 @@ def qualityDetail():
     resp = requests.post(url, json=payload, headers=headers)
     resp.raise_for_status()
     return resp.json()
+
+@kg.route('/getPicURL', methods=['GET'])
+def getPicURL():
+    """
+    获取歌曲图片链
+    :param songname: 歌曲名
+    :param songmid: 歌曲ID
+    :param albumId: 专辑ID
+    :param hash: 歌曲哈希值
+    :return: 图片链接的JSON数据
+    """
+    songname = request.args.get('songname', '')
+    songmid = request.args.get('songmid', '')
+    albumId = request.args.get('albumId', '')
+    hash = request.args.get('hash', '')
+
+    if not songname or not songmid or not albumId or not hash:
+        print(f"songname: {songname}, songmid: {songmid}, albumId: {albumId}, hash: {hash}, missing required parameters")
+        return jsonify({'picUrl': ""})
+
+    # 构造请求体
+    payload = {
+        "appid": 1001,
+        "area_code": "1",
+        "behavior": "play",
+        "clientver": "9020",
+        "need_hash_offset": 1,
+        "relate": 1,
+        "resource": [
+            {
+                "album_audio_id": songmid,
+                "album_id": albumId,
+                "hash": hash,
+                "id": 0,
+                "name": f"{songname}.mp3",
+                "type": "audio"
+            }
+        ],
+        "token": "",
+        "userid": 2626431536,
+        "vip": 1
+    }
+
+    url = 'http://media.store.kugou.com/v1/get_res_privilege'
+    
+    headers = {
+        'KG-RC': '1',
+        'KG-THash': 'expand_search_manager.cpp:852736169:451',
+        'User-Agent': 'KuGou2012-9020-ExpandSearchManager',
+        'Content-Type': 'application/json'
+    }
+
+    resp = requests.post(url, json=payload, headers=headers)
+    resp.raise_for_status()
+    
+    body = resp.json()
+    
+    if body['error_code'] != 0:
+        print(f"Error in response: {body.get('error_msg', 'Unknown error')}")
+        return jsonify({'picUrl': ""})
+    
+    info = body['data'][0]['info']
+    
+    imgsize = info.get('imgsize', [])[0] if info.get('imgsize') else None
+    img_url = info['image'].replace('{size}', str(imgsize)) if imgsize else info['image']
+    
+    if not img_url:
+        print(f"Image URL is empty for songname: {songname}, songmid: {songmid}, albumId: {albumId}, hash: {hash}")
+        return jsonify({'picUrl': ""})
+    
+    return jsonify({'picUrl': img_url})
